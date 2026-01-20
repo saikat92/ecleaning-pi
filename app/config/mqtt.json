@@ -1,0 +1,22 @@
+
+{
+  "broker": {
+    "host": "mqtt.example.com",
+    "port": 1883,
+    "username": "mqtt_user",
+    "password": "mqtt_password"
+    },
+    "topics": {
+    "subscribe": [
+      "devices/ecpix-1234567890/commands",
+      "devices/ecpix-1234567890/updates"
+    ],
+    "publish": [
+      "devices/ecpix-1234567890/status",
+      "devices/ecpix-1234567890/data"
+    ]
+    },
+    "qos": 1,
+    "keepalive": 60,
+    "clean_session": true
+}   

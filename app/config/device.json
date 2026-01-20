@@ -1,0 +1,11 @@
+
+{
+  "device_id": "ecpix-1234567890",
+  "version": "1.0.0",
+  "settings": {
+    "wifi_enabled": true,
+    "bluetooth_enabled": false,
+    "screen_brightness": 75,
+    "volume_level": 50
+  }
+}
