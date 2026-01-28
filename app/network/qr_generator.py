@@ -9,3 +9,5 @@ def generate_qr():
     img = qrcode.make(wifi_string)
     img.save("assets/qr.png")
     print("[QR] Wi‑Fi QR generated")
+
+generate_qr()

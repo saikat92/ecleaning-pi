@@ -7,13 +7,14 @@ try:
 except ImportError:
     GPIO_AVAILABLE = False
 
+
 class HardwareController:
     # GPIO pin mapping (BCM)
     MOTOR_PIN = 17
-    UV_LAMP_PIN = 27
+    UV_LAMP_PIN = 18
     BUZZER_PIN = 22
-    INDICATOR_LED_PIN = 13
-    EMERGENCY_PIN = 5  # Physical emergency switch
+    INDICATOR_LED_PIN = 23
+    EMERGENCY_PIN = 24  # Physical emergency switch
 
     def __init__(self):
         if GPIO_AVAILABLE:
@@ -79,3 +80,16 @@ class HardwareController:
     def emergency_triggered(self, channel):
         print("[HW] EMERGENCY STOP TRIGGERED")
         self.all_off()
+
+
+# print("Testiung one by one")
+# obj = HardwareController()
+# obj.motor_on()
+# obj.motor_off()
+# obj.uv_on()
+# obj.uv_off()
+# obj.beep()
+# obj.indicator()
+# obj.all_off()
+# obj.cleanup()
+

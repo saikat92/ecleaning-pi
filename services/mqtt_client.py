@@ -1,5 +1,5 @@
 import json
-import time
+import uuid
 
 try:
     import paho.mqtt.client as mqtt
@@ -7,26 +7,36 @@ try:
 except ImportError:
     MQTT_AVAILABLE = False
 
+
 class MQTTClient:
-    BROKER = "broker.hivemq.com"  # public broker for demo
+    BROKER = "test.mosquitto.org"
     PORT = 1883
+
     TOPIC_STATUS = "ecleaning/pi/status"
     TOPIC_COMMAND = "ecleaning/pi/command"
 
     def __init__(self, on_command_callback):
         self.on_command_callback = on_command_callback
+
         if MQTT_AVAILABLE:
-            self.client = mqtt.Client()
+            client_id = f"ecleaning-pi-{uuid.uuid4()}"
+            self.client = mqtt.Client(client_id=client_id, protocol=mqtt.MQTTv311)
+
             self.client.on_connect = self.on_connect
             self.client.on_message = self.on_message
+            self.client.on_disconnect = self.on_disconnect
+
             self.client.connect(self.BROKER, self.PORT, 60)
             self.client.loop_start()
         else:
-            print("[MQTT] Running in mock mode")
+            print("[MQTT] Mock mode")
 
     def on_connect(self, client, userdata, flags, rc):
-        print("[MQTT] Connected with result code", rc)
-        client.subscribe(self.TOPIC_COMMAND)
+        if rc == 0:
+            print("[MQTT] Connected successfully")
+            client.subscribe(self.TOPIC_COMMAND)
+        else:
+            print("[MQTT] Connection failed, code:", rc)
 
     def on_message(self, client, userdata, msg):
         payload = msg.payload.decode()
@@ -37,4 +47,7 @@ class MQTTClient:
         message = json.dumps({"state": state})
         if MQTT_AVAILABLE:
             self.client.publish(self.TOPIC_STATUS, message)
-        print("[MQTT] Status published:", message)
+        print("[MQTT] Status:", message)
+
+    def on_disconnect(self, client, userdata, rc):
+        print("[MQTT] Disconnected with code", rc)
