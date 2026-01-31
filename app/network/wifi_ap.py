@@ -1,32 +1,21 @@
 import subprocess
 
-
 def start_hotspot():
-    subprocess.run(["sudo", "systemctl", "stop", "NetworkManager"])
-    subprocess.run(["sudo", "systemctl", "stop", "wpa_supplicant"])
-    subprocess.run(["sudo", "ip", "link", "set", "wlan0", "down"])
-    subprocess.run(["sudo", "iw", "dev", "wlan0", "set", "type", "__ap"])
-    subprocess.run(["sudo", "ip", "link", "set", "wlan0", "up"])
-    subprocess.run(["sudo", "systemctl", "start", "dnsmasq"])
-    subprocess.run(["sudo", "systemctl", "start", "hostapd"])
-    print("[WIFI] Hotspot started (AP mode forced)")
+    subprocess.run([
+        "nmcli", "device", "wifi", "hotspot",
+        "ifname", "wlan0",
+        "con-name", "ECLEANING-PI",
+        "ssid", "ECLEANING-PI",
+        "password", "eclean123"
+    ], check=False)
 
-
-
+    print("[WIFI] Hotspot started via NetworkManager")
 
 start_hotspot()
 
-# SSID = "ECLEANING-PI"
-# PASSWORD = "eclean123"
 
-
-# def start_hotspot():
-#     subprocess.run(["sudo", "systemctl", "start", "hostapd"])
-#     subprocess.run(["sudo", "systemctl", "start", "dnsmasq"])
-#     print("[WIFI] Hotspot started")
-
-
-# def stop_hotspot():
-#     subprocess.run(["sudo", "systemctl", "stop", "hostapd"])
-#     subprocess.run(["sudo", "systemctl", "stop", "dnsmasq"])
-#     print("[WIFI] Hotspot stopped")
+#I have checked till step 7 and gave system a restart. after reboot tried to start wifi_ap.py and same error came. 
+# when i manually connect the hotspot station as it is already created  then it is running and showing 
+# {Device 'wlan0' successfully activated with 'c5ef0d17-1df4-47bb-8ad8-bd7ac0faa52c'.
+# Hint: "nmcli dev wifi show-password" shows the Wi-Fi name and password.
+# [WIFI] Hotspot started via NetworkManager}

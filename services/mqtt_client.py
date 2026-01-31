@@ -1,5 +1,7 @@
 import json
 import uuid
+import ssl
+import certifi
 
 try:
     import paho.mqtt.client as mqtt
@@ -10,7 +12,7 @@ except ImportError:
 
 class MQTTClient:
     BROKER = "test.mosquitto.org"
-    PORT = 1883
+    PORT = 8883
 
     TOPIC_STATUS = "ecleaning/pi/status"
     TOPIC_COMMAND = "ecleaning/pi/command"
@@ -25,11 +27,18 @@ class MQTTClient:
             self.client.on_connect = self.on_connect
             self.client.on_message = self.on_message
             self.client.on_disconnect = self.on_disconnect
+            
+            self.client.tls_set(
+                cert_reqs=ssl.CERT_NONE,
+                tls_version=ssl.PROTOCOL_TLS_CLIENT
+            )
+            self.client.tls_insecure_set(True)
 
             self.client.connect(self.BROKER, self.PORT, 60)
             self.client.loop_start()
+            
         else:
-            print("[MQTT] Mock mode")
+            print("[MQTT] Mock mode. UUID Not avialable.")
 
     def on_connect(self, client, userdata, flags, rc):
         if rc == 0:
